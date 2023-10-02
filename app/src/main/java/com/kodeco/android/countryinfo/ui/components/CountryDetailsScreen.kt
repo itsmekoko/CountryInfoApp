@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -43,9 +44,10 @@ fun CountryDetailsScreen(navBackStackEntry: NavBackStackEntry, countries: List<C
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Back",
             modifier = Modifier
-                .size(36.dp)
+                .size(48.dp)
+                .offset(x = (-8).dp)
                 .clickable { navController.navigateUp() },
-            tint = Color.Black
+            tint = Color.Black,
         )
 
         // Displaying the Country Details
