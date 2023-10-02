@@ -15,7 +15,7 @@ fun CountryInfoList(countries: List<Country>, navController: NavController) {
     LazyColumn {
         items(countries) { country ->
             CountryInfoRow(country, navController) // Your existing CountryInfoRow composable
-            HorizontalDivider(thickness = 1.dp, color = Color.Black) // Adds a black separation line
+            HorizontalDivider(thickness = 2.dp, color = Color.Black) // Adds a black separation line
         }
     }
 }

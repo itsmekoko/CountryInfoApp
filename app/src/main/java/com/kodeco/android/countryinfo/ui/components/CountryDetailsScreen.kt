@@ -45,7 +45,7 @@ fun CountryDetailsScreen(navBackStackEntry: NavBackStackEntry, countries: List<C
             contentDescription = "Back",
             modifier = Modifier
                 .size(48.dp)
-                .offset(x = (-8).dp)
+                .offset(x = (-8).dp) // Added the offset for aligning the button with the data
                 .clickable { navController.navigateUp() },
             tint = Color.Black,
         )
