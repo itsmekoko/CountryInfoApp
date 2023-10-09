@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +28,7 @@ fun CountryErrorScreen(error: Throwable, onRetry: () -> Unit) {
         Button(onClick = onRetry) {
             androidx.compose.material.Text(
                 text = "Retry",
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+                color = MaterialTheme.colors.onPrimary
             )
         }
     }
