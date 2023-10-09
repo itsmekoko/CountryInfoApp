@@ -8,8 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
-// TODO fill out Loading. NOTE this is above-and-beyond the requirements
-//  for the homework assignment.
 @Composable
 fun Loading() {
     Box(
@@ -20,8 +18,6 @@ fun Loading() {
     }
 }
 
-// TODO fill out preview. NOTE this is above-and-beyond the requirements
-//  for the homework assignment.
 @Preview
 @Composable
 fun LoadingPreview() {

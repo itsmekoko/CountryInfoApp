@@ -14,22 +14,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kodeco.android.countryinfo.data.Country
+import com.kodeco.android.countryinfo.sample.sampleCountry
 
-// TODO fill out CountryInfoRow
+
 @Composable
-fun CountryInfoRow(country: Country, navController: NavController) {
+fun CountryInfoRow(
+    country: Country,
+    onClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable {
-                navController.navigate(
-                    "countryDetails/${country.commonName}")
-            },
+            .clickable(onClick = onClick),  // Use .clickable() modifier here
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Load and display the country flag
@@ -46,4 +47,13 @@ fun CountryInfoRow(country: Country, navController: NavController) {
             Text(text = "Capital: ${country.capital?.joinToString() ?: "No Capital"}")
         }
     }
+}
+
+@Preview
+@Composable
+fun CountryInfoRowPreview() {
+    CountryInfoRow(
+        country = sampleCountry,
+        onClick = {},
+    )
 }

@@ -1,66 +1,71 @@
 package com.kodeco.android.countryinfo.ui.components
 
-import android.util.Log
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavHostController
+import androidx.compose.ui.tooling.preview.Preview
 import com.kodeco.android.countryinfo.data.Country
 import com.kodeco.android.countryinfo.network.CountryService
-import java.io.IOException
-import java.util.concurrent.CancellationException
+import com.kodeco.android.countryinfo.sample.sampleCountries
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
-// TODO fill out CountryInfoScreen
-@Composable
-fun CountryInfoScreen(
-    countryService: CountryService,
-    navController: NavHostController,
-    onCountriesFetched: (List<Country>) -> Unit  // Lambda to receive the fetched list of countries
-) {
-    var countries by rememberSaveable { mutableStateOf(emptyList<Country>()) }
-    var error by rememberSaveable { mutableStateOf<String?>(null) }
-    var isLoading by rememberSaveable { mutableStateOf(true) }  // Initialize isLoading as true
 
-    LaunchedEffect(countryService) {
-        // Only fetch countries if the list is empty
-        if (countries.isEmpty()) {
-            try {
-                val response = countryService.getAllCountries()
-                if (response.isSuccessful) {
-                    val fetchedCountries = response.body() ?: emptyList()
-                    countries = fetchedCountries
-                    onCountriesFetched(fetchedCountries)  // Invoke the lambda with the fetched list of countries
-                } else {
-                    // Customize error message based on HTTP error code or use a generic message
-                    error = when (response.code()) {
-                        404 -> "Countries not found."
-                        500 -> "Internal server error. Please try again later."
-                        else -> "Unable to load countries."
+sealed class CountryInfoState {
+    data object Loading : CountryInfoState()
+    data class Success(val countries: List<Country>) : CountryInfoState()
+    data class Error(val error: Throwable) : CountryInfoState()
+
+    @Composable
+
+    fun CountryInfoScreen(
+        service: CountryService,
+    ) {
+        var state: CountryInfoState by remember { mutableStateOf(Loading) }
+
+        Surface {
+            when (val curState = state) {
+                is Loading -> Loading()
+                is Success -> CountryInfoList(curState.countries)
+                is Error -> CountryErrorScreen(curState.error) {
+                    state = Loading
+                }
+
+                else -> {}
+            }
+        }
+
+        if (state == Loading) {
+            LaunchedEffect(key1 = "fetch-countries") {
+                launch {
+                    delay(1_000)
+                    state = try {
+                        val countriesResponse = service.getAllCountries()
+
+                        if (countriesResponse.isSuccessful) {
+                            Success(countriesResponse.body()!!)
+                        } else {
+                            Error(Throwable("Request failed: ${countriesResponse.message()}"))
+                        }
+                    } catch (exception: Exception) {
+                        Error(exception)
                     }
                 }
-            } catch (e: IOException) {
-                error = "Network error occurred. Please check your connection."
-            } catch (e: CancellationException) {
-                // Log the error message for debugging purposes
-                Log.d("CountryInfoScreen", "Coroutine cancelled: ${e.message}")
-            } catch (e: Exception) {
-                error = "An unexpected error occurred: ${e.message}. Please try again."
-            } finally {
-                isLoading = false  // Set isLoading to false after the network request completes
             }
         }
     }
 
-    when {
-        error != null -> CountryErrorScreen(errorMessage = error!!)
-        isLoading -> Loading()  // Show Loading composable when isLoading is true
-        else -> CountryInfoList(countries, navController)
+    @Preview
+    @Composable
+    fun CountryInfoScreenPreview() {
+        CountryInfoScreen(object : CountryService {
+            override suspend fun getAllCountries(): Response<List<Country>> =
+                Response.success(sampleCountries)
+        })
     }
 }
-
-
-
-
