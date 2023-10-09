@@ -30,8 +30,6 @@ data class Country(
     val commonName get() = name.common
     @IgnoredOnParcel
     val flagUrl = flags.png
-    @IgnoredOnParcel
-    val mainCapital = capital?.firstOrNull() ?: "N/A"
 
 }
 

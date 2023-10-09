@@ -20,17 +20,16 @@ import coil.compose.rememberAsyncImagePainter
 import com.kodeco.android.countryinfo.data.Country
 import com.kodeco.android.countryinfo.sample.sampleCountry
 
-
 @Composable
 fun CountryInfoRow(
     country: Country,
-    onClick: () -> Unit,
+    onClick: (Country) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable(onClick = onClick),  // Use .clickable() modifier here
+            .clickable(onClick = { onClick(country) }),  // Use .clickable() modifier here
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Load and display the country flag

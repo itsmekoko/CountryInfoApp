@@ -4,12 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.kodeco.android.countryinfo.network.CountryService
-import com.kodeco.android.countryinfo.ui.components.CountryInfoState
+import com.kodeco.android.countryinfo.ui.components.CountryInfoScreen
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +29,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                CountryInfoState.Loading.CountryInfoScreen(service)
+                CountryInfoScreen(service)  // Corrected this line
             }
         }
     }
 }
-
 
 
