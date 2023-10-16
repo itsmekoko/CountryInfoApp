@@ -1,24 +1,22 @@
 package com.kodeco.android.countryinfo.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,65 +25,82 @@ import com.kodeco.android.countryinfo.data.Country
 import com.kodeco.android.countryinfo.sample.sampleCountry
 
 @Composable
-fun CountryDetailsScreen(
-    country: Country,
-    onNavigateUp: () -> Unit,
-){
-    // Root Column to hold both the Icon and the other details
-    Column(
-        modifier = Modifier.padding(start = 16.dp) // Padding applied to the whole column
-    ) {
-        // Back button with the same padding as the Column
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Back",
+fun CountryDetailsScreen(country: Country, onNavigateUp: () -> Unit) {
+    val verticalScrollState = rememberScrollState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .size(48.dp)
-                .offset(x = (-8).dp)
-                .clickable( onClick = onNavigateUp),
-            tint = Color.Black,
-        )
-
-        // Displaying the Country Details
-        country.let {
-            Text(text = it.commonName, style = MaterialTheme.typography.headlineMedium)
-
-            val aspectRatio = 1.5f
+                .fillMaxWidth()
+                .verticalScroll(verticalScrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            val imagePainter = rememberAsyncImagePainter(model = country.flagUrl)
             Image(
-                painter = rememberAsyncImagePainter(model = it.flags.png),
+                painter = imagePainter,
                 contentDescription = null,
-                modifier = Modifier.width(192.dp)
-                    .padding(top = 16.dp)
-                    .aspectRatio(ratio = aspectRatio)
-                    .border(
-                        BorderStroke(2.dp, Color.Black),
-                        shape = RectangleShape
-
-                    ),
-                contentScale = ContentScale.FillBounds
-
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.Black)
+                    .padding(1.dp),
+                contentScale = ContentScale.Crop
             )
 
             Text(
-                text = "Capital: ${it.capital?.joinToString() ?: "N/A"}",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 16.dp)
-            )
+                text = "Country: ${country.name.common}",
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.h4,
+                color = contentColorFor(MaterialTheme.colors.primary))
+
+            if (country.capital.isNullOrEmpty()) {
+                Text(
+                    text = "Has no capital!",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.h6,
+                    color = contentColorFor(MaterialTheme.colors.primary))
+
+            } else {
+                Text(
+                    text = "Capital: ${country.capital[0]}",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.h6,
+                    color = contentColorFor(MaterialTheme.colors.primary))
+
+            }
             Text(
-                text = "Population: ${it.population}",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(text = "Area: ${it.area} sq km", style = MaterialTheme.typography.titleLarge)
+                text = "Area: ${country.area} km²",
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.h6,
+                color = contentColorFor(MaterialTheme.colors.primary))
+
+            Text(
+                text = "Population: ${country.population}",
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.h6,
+                color = contentColorFor(MaterialTheme.colors.primary))
+
+
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(96.dp)
+                    .padding(16.dp)
+                    .clickable {
+                        AppFlows.tapBack()
+                        onNavigateUp()
+                    },
+                tint = contentColorFor(MaterialTheme.colors.primary))
 
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CountryDetailsScreenPreview() {
-    CountryDetailsScreen(
-        country = sampleCountry,
-        onNavigateUp = {},
-    )
+    CountryDetailsScreen(sampleCountry) {}
 }
+
