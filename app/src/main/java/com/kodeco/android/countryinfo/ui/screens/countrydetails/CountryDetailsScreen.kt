@@ -1,4 +1,4 @@
-package com.kodeco.android.countryinfo.ui.components
+package com.kodeco.android.countryinfo.ui.screens.countrydetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,10 +22,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.kodeco.android.countryinfo.data.Country
+import com.kodeco.android.countryinfo.repositories.CountryRepository
 import com.kodeco.android.countryinfo.sample.sampleCountry
+import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun CountryDetailsScreen(country: Country, onNavigateUp: () -> Unit) {
+fun CountryDetailsScreen(country: Country, viewModel: CountryInfoViewModel, onNavigateUp: () -> Unit) {
     val verticalScrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -52,35 +56,38 @@ fun CountryDetailsScreen(country: Country, onNavigateUp: () -> Unit) {
                 text = "Country: ${country.name.common}",
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.h4,
-                color = contentColorFor(MaterialTheme.colors.primary))
+                color = contentColorFor(MaterialTheme.colors.primary)
+            )
 
             if (country.capital.isNullOrEmpty()) {
                 Text(
                     text = "Has no capital!",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.h6,
-                    color = contentColorFor(MaterialTheme.colors.primary))
-
+                    color = contentColorFor(MaterialTheme.colors.primary)
+                )
             } else {
                 Text(
                     text = "Capital: ${country.capital[0]}",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.h6,
-                    color = contentColorFor(MaterialTheme.colors.primary))
-
+                    color = contentColorFor(MaterialTheme.colors.primary)
+                )
             }
+
             Text(
                 text = "Area: ${country.area} km²",
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.h6,
-                color = contentColorFor(MaterialTheme.colors.primary))
+                color = contentColorFor(MaterialTheme.colors.primary)
+            )
 
             Text(
                 text = "Population: ${country.population}",
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.h6,
-                color = contentColorFor(MaterialTheme.colors.primary))
-
+                color = contentColorFor(MaterialTheme.colors.primary)
+            )
 
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -89,11 +96,11 @@ fun CountryDetailsScreen(country: Country, onNavigateUp: () -> Unit) {
                     .size(96.dp)
                     .padding(16.dp)
                     .clickable {
-                        AppFlows.tapBack()
+                        viewModel.incrementBack()
                         onNavigateUp()
                     },
-                tint = contentColorFor(MaterialTheme.colors.primary))
-
+                tint = contentColorFor(MaterialTheme.colors.primary)
+            )
         }
     }
 }
@@ -101,6 +108,13 @@ fun CountryDetailsScreen(country: Country, onNavigateUp: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun CountryDetailsScreenPreview() {
-    CountryDetailsScreen(sampleCountry) {}
+    CountryDetailsScreen(sampleCountry, CountryInfoViewModel(DummyRepository)) {}
 }
 
+object DummyRepository : CountryRepository {
+    override fun fetchCountries(): Flow<List<Country>> = flowOf(emptyList())
+
+    override fun triggerFetchCountries(): Flow<List<Country>> = flowOf(emptyList())
+
+    override fun getCountry(id: String): Country? = null
+}

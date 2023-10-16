@@ -9,36 +9,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kodeco.android.countryinfo.data.Country
-import com.kodeco.android.countryinfo.sample.sampleCountries
+import com.kodeco.android.countryinfo.ui.screens.countrydetails.CountryDetailsScreen
+import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModel
 
 @Composable
-fun CountryInfoList(countries: List<Country>) {
+fun CountryInfoList(countries: List<Country>, viewModel: CountryInfoViewModel) {
     var selectedCountry: Country? by remember { mutableStateOf(null) }
 
     selectedCountry?.let { country ->
-        CountryDetailsScreen(country) { selectedCountry = null }
+        CountryDetailsScreen(country, viewModel) { selectedCountry = null }
     } ?: run {
         LazyColumn {
             items(countries) { country ->
-                CountryInfoRow(country) {
+                CountryInfoRow(country, viewModel) {
                     selectedCountry = country
-                    AppFlows.tap()
                 }
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = androidx.compose.material3.contentColorFor(MaterialTheme.colors.primary)
-                )  // Updated divider to use theme color
+                )
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun CountryInfoListPreview() {
-    CountryInfoList(sampleCountries)
 }

@@ -12,6 +12,7 @@ data class CountryName(
     common: String
 ) : Parcelable
 
+
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class CountryFlags(
@@ -30,7 +31,7 @@ data class Country(
     val commonName get() = name.common
     @IgnoredOnParcel
     val flagUrl = flags.png
-
 }
+
 
 

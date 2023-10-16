@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.kodeco.android.countryinfo.network.CountryService
-import com.kodeco.android.countryinfo.ui.components.CountryInfoScreen
+import com.kodeco.android.countryinfo.repositories.CountryRepositoryImpl
+import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoScreen
+import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModel
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -26,10 +28,12 @@ class MainActivity : ComponentActivity() {
             .build()
 
         val service: CountryService = retrofit.create(CountryService::class.java)
+        val repository = CountryRepositoryImpl(service)
+        val viewModel = CountryInfoViewModel(repository)
 
         setContent {
             MyApplicationTheme {
-                CountryInfoScreen(service)  // Corrected this line
+                CountryInfoScreen(viewModel)
             }
         }
     }
