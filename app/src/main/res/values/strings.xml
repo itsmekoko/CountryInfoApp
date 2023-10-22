@@ -2,4 +2,11 @@
     <string name="app_name">Country Info</string>
     <string name="x_axis_slider_title">X Axis: %d%%</string>
     <string name="y_axis_slider_title">Y Axis: %d%%</string>
+    <string name="about_title">App made by Kodeco\n</string>
+    <string name="about_screen">About screen</string>
+    <string name="app_info">
+    "This app is developed by Kodeco for the purpose of learning Android Development."
+</string>
+    <string name = "countries_by_population_title">Countries by Population</string>
+    <string name="no_data_available_message">No data available right now!</string>
 </resources>

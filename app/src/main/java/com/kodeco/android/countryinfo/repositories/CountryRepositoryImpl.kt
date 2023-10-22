@@ -23,7 +23,8 @@ class CountryRepositoryImpl(private val service: CountryService) : CountryReposi
         }
     }
 
-    override fun getCountry(id: String): Country? {
-        return countries?.find { it.name.common == id }
+    override fun getCountry(id: Int): Country? {
+        return countries?.getOrNull(id)
     }
+
 }
