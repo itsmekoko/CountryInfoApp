@@ -9,17 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingScreen() {
-    val uptime by AppFlows.counterFlow.collectAsState(initial = 0)
-
+fun LoadingScreen(uptime: Int) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -29,7 +25,7 @@ fun LoadingScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(text = "App Uptime: $uptime seconds")
-            Spacer(modifier = Modifier.height(8.dp))  // Add some spacing between the text and the progress indicator
+            Spacer(modifier = Modifier.height(8.dp))
             CircularProgressIndicator()
         }
     }
@@ -38,5 +34,5 @@ fun LoadingScreen() {
 @Preview
 @Composable
 fun LoadingPreview() {
-    LoadingScreen()
+    LoadingScreen(uptime = 123)
 }

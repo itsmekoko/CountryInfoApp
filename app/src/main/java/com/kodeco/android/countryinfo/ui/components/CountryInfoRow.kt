@@ -14,25 +14,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.kodeco.android.countryinfo.data.Country
-import com.kodeco.android.countryinfo.sample.sampleCountry
+import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModel
 
 @Composable
 fun CountryInfoRow(
     country: Country,
+    viewModel: CountryInfoViewModel,
     onClick: (Country) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable(onClick = { onClick(country) }),  // Use .clickable() modifier here
+            .clickable(onClick = { onClick(country); viewModel.incrementTap() }),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Load and display the country flag
         Image(
             painter = rememberAsyncImagePainter(model = country.flags.png),
             contentDescription = null,
@@ -46,13 +45,4 @@ fun CountryInfoRow(
             Text(text = "Capital: ${country.capital?.joinToString() ?: "No Capital"}")
         }
     }
-}
-
-@Preview
-@Composable
-fun CountryInfoRowPreview() {
-    CountryInfoRow(
-        country = sampleCountry,
-        onClick = {},
-    )
 }
