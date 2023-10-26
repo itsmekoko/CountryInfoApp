@@ -1,0 +1,52 @@
+package com.kodeco.android.countryinfo.ui.screens.countrydetails
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kodeco.android.countryinfo.data.Country
+import com.kodeco.android.countryinfo.repositories.CountryRepository
+import com.kodeco.android.countryinfo.repositories.SharedRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+sealed class UIState {
+    data object Loading : UIState()
+    data class Success(val country: Country) : UIState()
+    data object Error : UIState()
+}
+class CountryDetailsViewModel(
+    countryId: Int,
+    private val repository: CountryRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        fetchCountryData(countryId)
+    }
+
+    private fun fetchCountryData(countryId: Int) {
+        viewModelScope.launch {
+            println("Fetching country data for ID: $countryId")
+            val country = repository.getCountry(countryId)
+            if (country != null) {
+                println("Fetched country data successfully: ${country.name.common}")
+                _uiState.emit(UIState.Success(country))
+            } else {
+                println("Failed to fetch country data for ID: $countryId")
+                _uiState.emit(UIState.Error)
+            }
+        }
+    }
+    fun incrementBack() {
+        SharedRepository.incrementBackCounter()
+    }
+    fun onRefresh(countryId: Int) {
+        println("Refresh called for country ID: $countryId")
+        _uiState.value = UIState.Loading
+        fetchCountryData(countryId)
+    }
+}
+
+

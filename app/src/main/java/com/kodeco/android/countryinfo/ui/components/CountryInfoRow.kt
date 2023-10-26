@@ -22,14 +22,15 @@ import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewMode
 @Composable
 fun CountryInfoRow(
     country: Country,
+    index: Int,
     viewModel: CountryInfoViewModel,
-    onClick: (Country) -> Unit,
+    onClick: (Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable(onClick = { onClick(country); viewModel.incrementTap() }),
+            .clickable(onClick = { onClick(index); viewModel.incrementTap() }),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
