@@ -12,7 +12,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         val service: CountryService = retrofit.create(CountryService::class.java)
-        val repository = CountryRepositoryImpl(service)
+        val repository = CountryRepositoryImpl(service, applicationContext)
 
         setContent {
             MyApplicationTheme {

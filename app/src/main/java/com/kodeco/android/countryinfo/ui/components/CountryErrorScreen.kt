@@ -14,17 +14,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun CountryErrorScreen(error: Throwable, onRetry: () -> Unit) {
+fun CountryErrorScreen(message: String, onRetry: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Log.e("CountryErrorScreen", "Error: ${error.message}")
+        Log.e("CountryErrorScreen", "Error: $message")
 
-        // Use material3 Text component
         Text(
-            text = "Error: ${error.message}",
+            text = "Error: $message",
             color = if (isSystemInDarkTheme()) Color.White else Color.Black
         )
 
@@ -41,7 +40,7 @@ fun CountryErrorScreen(error: Throwable, onRetry: () -> Unit) {
 @Composable
 fun CountryErrorScreenPreview() {
     CountryErrorScreen(
-        error = Throwable("Error message"),
+        message = "Error message",
         onRetry = {},
     )
 }

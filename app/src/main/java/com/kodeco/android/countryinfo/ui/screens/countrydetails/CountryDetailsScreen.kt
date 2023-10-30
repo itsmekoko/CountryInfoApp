@@ -1,14 +1,15 @@
 package com.kodeco.android.countryinfo.ui.screens.countrydetails
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,9 +19,13 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -38,6 +43,9 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
     val isDarkTheme = isSystemInDarkTheme()
     val contentColor = contentColorFor(MaterialTheme.colorScheme.surface)
     val backgroundColor = MaterialTheme.colorScheme.background
+
+    var scale by remember { mutableFloatStateOf(1f) }
+    val animatedScale by animateFloatAsState(targetValue = scale, label = "")
 
     when (uiState) {
         is UIState.Loading -> {
@@ -58,7 +66,6 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    // Existing UI code for displaying country details
                     IconButton(
                         onClick = {
                             viewModel.incrementBack()
@@ -73,13 +80,22 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
                         )
                     }
 
-                    val imagePainter = rememberAsyncImagePainter(model = country.flagUrl)
                     Image(
-                        painter = imagePainter,
+                        painter = rememberAsyncImagePainter(model = country.flagUrl),
                         contentDescription = null,
-                        modifier = Modifier.size(200.dp).clip(MaterialTheme.shapes.medium).background(Color.Black).padding(1.dp),
+                        modifier = Modifier
+                            .size(200.dp)
+                            .scale(animatedScale)
+                            .clickable {
+                                scale = if (scale == 1f) 1.3f else 1f
+                            }
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(Color.Black)
+                            .padding(1.dp),
                         contentScale = ContentScale.Crop
                     )
+
+                    Spacer(modifier = Modifier.height(32.dp))
 
                     val textColor = if (isDarkTheme) Color.White else Color.Black
 
@@ -123,21 +139,6 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
             }
         }
         is UIState.Error -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "Failed to load data. Please retry.")
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { viewModel.onRefresh(countryId = 1) }) {
-                        Text(text = "Refresh")
-                    }
-                }
-            }
         }
     }
 }

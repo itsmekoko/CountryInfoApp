@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.kodeco.android.countryinfo.repositories.SharedRepository
 import com.kodeco.android.countryinfo.ui.components.CountryErrorScreen
 import com.kodeco.android.countryinfo.ui.components.CountryInfoList
 import com.kodeco.android.countryinfo.ui.components.LoadingScreen
@@ -28,6 +29,7 @@ fun CountryInfoScreen(
     onNavigateToPopulation: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val backCountFromSharedRepo = SharedRepository.backCounter.value
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -44,9 +46,7 @@ fun CountryInfoScreen(
             ) {
                 val tapCount = viewModel.tapCount.intValue
                 Text(text = "List Taps: $tapCount")
-
-                val backCount = viewModel.backCount.value
-                Text(text = "Detail Backs: $backCount")
+                Text(text = "Detail Backs: $backCountFromSharedRepo")
             }
 
             Row(
@@ -99,7 +99,7 @@ fun CountryInfoScreen(
                     viewModel = viewModel,
                     onCountryClicked = onCountryRowTap
                 )
-                is CountryInfoViewModel.CountryInfoState.Error -> CountryErrorScreen((state as CountryInfoViewModel.CountryInfoState.Error).error, onRetry = viewModel::onRefresh)
+                is CountryInfoViewModel.CountryInfoState.Error -> CountryErrorScreen((state as CountryInfoViewModel.CountryInfoState.Error).message, onRetry = viewModel::onRefresh)
             }
         }
     }

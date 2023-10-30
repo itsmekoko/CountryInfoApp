@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kodeco.android.countryinfo.repositories.CountryRepository
 import com.kodeco.android.countryinfo.ui.screens.about.AboutScreen
+import com.kodeco.android.countryinfo.ui.screens.about.NavControllerAdapter
 import com.kodeco.android.countryinfo.ui.screens.countrydetails.CountryDetailsScreen
 import com.kodeco.android.countryinfo.ui.screens.countrydetails.CountryDetailsViewModel
 import com.kodeco.android.countryinfo.ui.screens.countrydetails.CountryDetailsViewModelFactory
@@ -50,13 +51,13 @@ fun CountryInfoNavHost(repository: CountryRepository) {
         }
 
         composable("about") {
-            AboutScreen(navController = navController)
+            val navControllerAdapter = NavControllerAdapter(navController)
+            AboutScreen(navController = navControllerAdapter)
         }
 
         composable("countriesByPopulation") {
 
             CountriesByPopulationScreen(navController = navController, repository = repository)
-
         }
     }
 }
