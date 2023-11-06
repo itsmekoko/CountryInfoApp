@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
+    implementation (libs.material3)
     implementation(libs.navigation)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.ui)
@@ -76,6 +77,8 @@ dependencies {
     implementation(libs.retrofit.moshi)
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.coil)
+    implementation ("com.airbnb.android:lottie-compose:6.1.0")
+
 
     ksp (libs.moshiCodeGen)
 

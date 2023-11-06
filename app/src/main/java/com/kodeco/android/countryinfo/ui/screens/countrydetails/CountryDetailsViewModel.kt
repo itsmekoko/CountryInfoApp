@@ -6,7 +6,7 @@ import com.kodeco.android.countryinfo.data.Country
 import com.kodeco.android.countryinfo.repositories.CountryRepository
 import com.kodeco.android.countryinfo.repositories.SharedRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 sealed class UIState {
@@ -14,13 +14,16 @@ sealed class UIState {
     data class Success(val country: Country) : UIState()
     data object Error : UIState()
 }
+
 class CountryDetailsViewModel(
-    countryId: Int,
+    initialCountryId: Int,
     private val repository: CountryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
-    val uiState = _uiState.asStateFlow()
+    val uiState: StateFlow<UIState> = _uiState
+
+    private var countryId: Int = initialCountryId
 
     init {
         fetchCountryData(countryId)
@@ -39,14 +42,11 @@ class CountryDetailsViewModel(
             }
         }
     }
+
     fun incrementBack() {
         SharedRepository.incrementBackCounter()
     }
-    fun onRefresh(countryId: Int) {
-        println("Refresh called for country ID: $countryId")
-        _uiState.value = UIState.Loading
-        fetchCountryData(countryId)
-    }
 }
+
 
 

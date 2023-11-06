@@ -12,7 +12,6 @@ data class CountryName(
     common: String
 ) : Parcelable
 
-
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class CountryFlags(
@@ -26,7 +25,8 @@ data class Country(
     val capital: List<String>?,
     val population: Long,
     val area: Float,
-    val flags: CountryFlags
+    val flags: CountryFlags,
+    val isFavorite: Boolean = false
 ) : Parcelable {
     val commonName get() = name.common
     @IgnoredOnParcel

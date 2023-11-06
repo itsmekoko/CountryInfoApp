@@ -1,13 +1,10 @@
 package com.kodeco.android.countryinfo.ui.screens.population
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -17,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,18 +22,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.kodeco.android.countryinfo.R
 import com.kodeco.android.countryinfo.repositories.CountryRepository
 import com.kodeco.android.countryinfo.ui.components.CountryInfoList
 import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModel
 import com.kodeco.android.countryinfo.ui.screens.countryinfo.CountryInfoViewModelFactory
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CountriesByPopulationScreen(navController: NavController, repository: CountryRepository) {
     val viewModelFactory = CountryInfoViewModelFactory(repository)
     val viewModel: CountryInfoViewModel = viewModel(factory = viewModelFactory)
     val countriesState = viewModel.uiState.collectAsState().value
+
+    val lottieComposition = rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading_animation))
+    val progress by animateLottieCompositionAsState(lottieComposition.value)
 
     Scaffold(
         topBar = {
@@ -48,39 +52,43 @@ fun CountriesByPopulationScreen(navController: NavController, repository: Countr
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 64.dp),
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            when (countriesState) {
-                is CountryInfoViewModel.CountryInfoState.Loading -> {
+            when {
+                progress < 1f -> {
+                    LottieAnimation(composition = lottieComposition.value)
+                }
+                countriesState is CountryInfoViewModel.CountryInfoState.Loading -> {
                     Column(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CircularProgressIndicator()
+                        androidx.compose.material3.CircularProgressIndicator()
                     }
                 }
-                is CountryInfoViewModel.CountryInfoState.Error -> {
+                countriesState is CountryInfoViewModel.CountryInfoState.Error -> {
                     Column(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             text = stringResource(id = R.string.no_data_available_message),
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             textAlign = TextAlign.Center
                         )
                     }
                 }
-                is CountryInfoViewModel.CountryInfoState.Success -> {
+                countriesState is CountryInfoViewModel.CountryInfoState.Success -> {
                     val orderedCountries = countriesState.countries.sortedByDescending { it.population }
-                    CountryInfoList(countries = orderedCountries, viewModel = viewModel) {
-                    }
+                    CountryInfoList(countries = orderedCountries, viewModel = viewModel) {}
                 }
+                else -> {}
             }
         }
     }
