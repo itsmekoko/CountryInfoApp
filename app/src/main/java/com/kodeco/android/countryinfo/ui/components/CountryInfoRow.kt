@@ -55,13 +55,13 @@ fun CountryInfoRow(
 
     val iconSize by animateDpAsState(
         targetValue = if (country.isFavorite) 38.dp else 30.dp,
-        animationSpec = tween(500)
+        animationSpec = tween(500), label = ""
     )
 
     val rotationState = remember { mutableFloatStateOf(0f) }
     val animatedRotation by animateFloatAsState(
         targetValue = rotationState.floatValue,
-        animationSpec = tween(300)
+        animationSpec = tween(300), label = ""
     )
 
     LaunchedEffect(key1 = animatedRotation) {
@@ -78,7 +78,7 @@ fun CountryInfoRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(model = country.flags.png),
+            painter = rememberAsyncImagePainter(model = country.flagUrl),
             contentDescription = null,
             modifier = Modifier.size(64.dp)
         )
@@ -89,7 +89,7 @@ fun CountryInfoRow(
             modifier = Modifier.weight(1f)
         ) {
             Text(text = "Country: ${country.commonName}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Capital: ${country.capital?.joinToString() ?: "No Capital"}")
+            Text(text = "Capital: ${country.mainCapital}")
         }
         Icon(
             painter = if (country.isFavorite) favoriteFilledIcon else favoriteOutlineIcon,
@@ -114,14 +114,14 @@ fun CountryInfoRowShimmer() {
         Color.Gray.copy(alpha = 0.7f),
         Color.Gray.copy(alpha = 0.3f)
     )
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "")
     val animation = transition.animateFloat(
         initialValue = -1f,
         targetValue = 2f,
         animationSpec = infiniteRepeatable(
             tween(1500, easing = LinearEasing),
             RepeatMode.Restart
-        )
+        ), label = ""
     )
 
     val screenWidth = LocalConfiguration.current.screenWidthDp

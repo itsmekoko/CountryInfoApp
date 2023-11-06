@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -69,7 +70,7 @@ fun CountriesByPopulationScreen(navController: NavController, repository: Countr
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        androidx.compose.material3.CircularProgressIndicator()
+                        CircularProgressIndicator()
                     }
                 }
                 countriesState is CountryInfoViewModel.CountryInfoState.Error -> {
@@ -93,4 +94,3 @@ fun CountriesByPopulationScreen(navController: NavController, repository: Countr
         }
     }
 }
-

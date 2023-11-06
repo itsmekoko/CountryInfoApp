@@ -34,7 +34,7 @@ class CountryDetailsViewModel(
             println("Fetching country data for ID: $countryId")
             val country = repository.getCountry(countryId)
             if (country != null) {
-                println("Fetched country data successfully: ${country.name.common}")
+                println("Fetched country data successfully: ${country.commonName}")
                 _uiState.emit(UIState.Success(country))
             } else {
                 println("Failed to fetch country data for ID: $countryId")
@@ -47,6 +47,7 @@ class CountryDetailsViewModel(
         SharedRepository.incrementBackCounter()
     }
 }
+
 
 
 
