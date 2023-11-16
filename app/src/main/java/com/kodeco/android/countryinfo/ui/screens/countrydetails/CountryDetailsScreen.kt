@@ -100,13 +100,13 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
                     val textColor = if (isDarkTheme) Color.White else Color.Black
 
                     Text(
-                        text = "Country: ${country.name.common}",
+                        text = "Country: ${country.commonName}",
                         modifier = Modifier.padding(16.dp),
                         style = h4Style,
                         color = textColor
                     )
 
-                    if (country.capital.isNullOrEmpty()) {
+                    if (country.mainCapital.isEmpty()) {
                         Text(
                             text = "Has no capital!",
                             modifier = Modifier.padding(16.dp),
@@ -115,7 +115,7 @@ fun CountryDetailsScreen(viewModel: CountryDetailsViewModel, onNavigateUp: () ->
                         )
                     } else {
                         Text(
-                            text = "Capital: ${country.capital[0]}",
+                            text = "Capital: ${country.mainCapital[0]}",
                             modifier = Modifier.padding(16.dp),
                             style = h6Style,
                             color = textColor

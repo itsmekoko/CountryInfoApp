@@ -48,3 +48,4 @@ fun LoadingScreen(uptime: Int) {
 fun LoadingPreview() {
     LoadingScreen(uptime = 123)
 }
+

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
+
 }
 
 android {
@@ -78,6 +79,21 @@ dependencies {
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.coil)
     implementation ("com.airbnb.android:lottie-compose:6.1.0")
+    val room_version = "2.5.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+
+    // To use Kotlin annotation processing tool (kapt)
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+
+    ksp(libs.moshiCodeGen)
 
 
     ksp (libs.moshiCodeGen)

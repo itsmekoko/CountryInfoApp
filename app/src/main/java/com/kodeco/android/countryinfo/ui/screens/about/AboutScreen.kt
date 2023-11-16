@@ -35,6 +35,7 @@ import kotlinx.coroutines.delay
 
 interface MockableNavController {
     fun popBackStack()
+    // Add other methods you use from NavController if needed
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -50,6 +51,7 @@ fun AboutScreen(navController: MockableNavController) {
         }
     }
 
+    // Handle delayed entry animation
     LaunchedEffect(Unit) {
         delay(400)
         visible = true

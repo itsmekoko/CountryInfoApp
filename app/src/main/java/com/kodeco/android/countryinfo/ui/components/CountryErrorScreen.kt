@@ -22,6 +22,7 @@ fun CountryErrorScreen(message: String, onRetry: () -> Unit) {
     ) {
         Log.e("CountryErrorScreen", "Error: $message")
 
+        // Use material3 Text component
         Text(
             text = "Error: $message",
             color = if (isSystemInDarkTheme()) Color.White else Color.Black
